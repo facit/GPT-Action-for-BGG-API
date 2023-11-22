@@ -1,0 +1,943 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "BoardGameGeek XML API2",
+        "description": "API providing access to BoardGameGeek's extensive board game database.",
+        "version": "v1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://boardgamegeek.com/xmlapi2"
+        }
+    ],
+    "paths": {
+        "/thing": {
+            "get": {
+                "summary": "Retrieve Information on Thing Items",
+                "description": "In the BGG database, any physical, tangible product is called a thing. The XMLAPI2 supports things of the following THINGTYPEs; boardgame, boardgameexpansion, boardgameaccessory, videogame, rpgitem, and rpgissue (for periodicals).",
+                "operationId": "GetThing",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Specifies the id of the thing(s) to retrieve.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filters the results by the THINGTYPE(s) specified.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "versions",
+                        "in": "query",
+                        "description": "Returns version info for the item.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "videos",
+                        "in": "query",
+                        "description": "Returns videos for the item.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "stats",
+                        "in": "query",
+                        "description": "Returns ranking and rating stats for the item.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "historical",
+                        "in": "query",
+                        "description": "Not currently supported. Returns historical data over time. See page parameter.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "marketplace",
+                        "in": "query",
+                        "description": "Returns marketplace data.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "comments",
+                        "in": "query",
+                        "description": "Returns all comments about the item. Also includes ratings when commented. See page parameter.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "ratingcomments",
+                        "in": "query",
+                        "description": "Returns all ratings for the item. Also includes comments when rated. See page parameter. The ratingcomments and comments parameters cannot be used together, as the output always appears in the <comments> node of the XML; comments parameter takes precedence if both are specified. Ratings are sorted in descending rating value, based on the highest rating they have assigned to that item (each item in the collection can have a different rating).",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Defaults to 1, controls the page of data to see for historical info, comments, and ratings data.",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "pagesize",
+                        "in": "query",
+                        "description": "Set the number of records to return in paging. Minimum is 10, maximum is 100.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 10,
+                            "maximum": 100
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Not currently supported. Intended to filter results from the specified date.",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "Not currently supported. Intended to filter results to the specified date.",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with thing item data."
+                    }
+                }
+            }
+        },
+        "/family": {
+            "get": {
+                "summary": "Retrieve Information on Family Items",
+                "description": "In the BGG database, more abstract or esoteric concepts are represented by something called a family. The XMLAPI2 supports families of the following FAMILYTYPEs; rpg, rpgperiodical and boardgamefamily",
+                "operationId": "GetFamily",
+                "parameters": [
+                    {
+                        "description": "Specifies the id of the family to retrieve. To request multiple families with a single query, NNN can specify a comma-delimited list of ids.",
+                        "in": "query",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Specifies that, regardless of the type of family asked for by id, the results are filtered by the FAMILYTPE(s) specified. Multiple FAMILYTYPEs can be specified in a comma-delimited list.",
+                        "in": "query",
+                        "name": "type",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with family data."
+                    }
+                }
+            }
+        },
+        "/forumlist": {
+            "get": {
+                "summary": "Retrieve a list of Forums",
+                "description": "You can request a list of forums for a particular type/id through the XMLAPI2.",
+                "operationId": "GetForumList",
+                "parameters": [
+                    {
+                        "description": "Specifies the id of the type of database entry you want the forum list for. This is the id that appears in the address of the page when visiting a particular game in the database.",
+                        "in": "query",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "The type of entry in the database (thing or family).",
+                        "in": "query",
+                        "name": "type",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with forumlist data."
+                    }
+                }
+            }
+        },
+        "/forum": {
+            "get": {
+                "summary": "Retrieve a List of Forum Threads",
+                "description": "You can request a list of threads in a particular forum through the XMLAPI2.",
+                "operationId": "GetForum",
+                "parameters": [
+                    {
+                        "description": "Specifies the id of the forum. This is the id that appears in the address of the page when visiting a forum in the browser.",
+                        "in": "query",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "The page of the thread list to return; page size is 50. Threads in the thread list are sorted in order of most recent post.",
+                        "in": "query",
+                        "name": "page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with forum data."
+                    }
+                }
+            }
+        },
+        "/thread": {
+            "get": {
+                "summary": "Retrieve Forum Thread Information",
+                "description": "With the XMLAPI2 you can request forum threads by thread id. A thread consists of some basic information about the thread and a series of articles or individual postings.",
+                "operationId": "GetThread",
+                "parameters": [
+                    {
+                        "description": "Specifies the id of the thread to retrieve.",
+                        "in": "query",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Filters the results so that only articles with an equal or higher id than this value will be returned.",
+                        "in": "query",
+                        "name": "minarticleid",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Filters results for articles on or after a specified date.",
+                        "in": "query",
+                        "name": "minarticledate",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Limits the number of articles returned to no more than this number.",
+                        "in": "query",
+                        "name": "count",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Not currently supported. Intended to filter the results on username.",
+                        "in": "query",
+                        "name": "username",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with thread data."
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "summary": "Retrieve User Information",
+                "description": "With the XMLAPI2 you can request basic public profile information about a user by username.",
+                "operationId": "GetUser",
+                "parameters": [
+                    {
+                        "description": "Specifies the user name (only one user is requestable at a time).",
+                        "in": "query",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Turns on optional buddies reporting. Results are paged; see page parameter.",
+                        "in": "query",
+                        "name": "buddies",
+                        "schema": {
+                            "enum": [
+                                1
+                            ],
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Turns on optional guilds reporting. Results are paged; see page parameter.",
+                        "in": "query",
+                        "name": "guilds",
+                        "schema": {
+                            "enum": [
+                                1
+                            ],
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Include the user's hot 10 list from their profile. Omitted if empty.",
+                        "in": "query",
+                        "name": "hot",
+                        "schema": {
+                            "enum": [
+                                1
+                            ],
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Include the user's top 10 list from their profile. Omitted if empty.",
+                        "in": "query",
+                        "name": "top",
+                        "schema": {
+                            "enum": [
+                                1
+                            ],
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Controls the domain for the users hot 10 and top 10 lists. The DOMAIN default is boardgame; valid values are boardgame, rpg and videogame.",
+                        "in": "query",
+                        "name": "domain",
+                        "schema": {
+                            "enum": [
+                                "boardgame",
+                                "rpg",
+                                "videogame"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Specifies the page of buddy and guild results to return. The default page is 1 if you don't specify it; page size is 100 records (Current implementation seems to return 1000 records). The page parameter controls paging for both buddies and guilds list if both are specified. If a <buddies> or <guilds> node is empty, it means that you have requested a page higher than that needed to list all the buddies/guilds or, if you're on page 1, it means that that user has no buddies and is not part of any guilds.",
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with user data."
+                    }
+                }
+            }
+        },
+        "/guild": {
+            "get": {
+                "summary": "Retrieve Guild Information",
+                "description": "Request information about particular guilds.",
+                "operationId": "GetGuild",
+                "parameters": [
+                    {
+                        "description": "ID of the guild you want to view.",
+                        "in": "query",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Include member roster in the results. Member list is paged and sorted.",
+                        "in": "query",
+                        "name": "members",
+                        "schema": {
+                            "enum": [
+                                1
+                            ],
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Specifies how to sort the members list; default is username. Valid values are username and date",
+                        "in": "query",
+                        "name": "sort",
+                        "schema": {
+                            "enum": [
+                                "username",
+                                "date"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The page of the members list to return. Page size is 25.",
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with guild data."
+                    }
+                }
+            }
+        },
+        "/plays": {
+            "get": {
+                "summary": "Retrieve logged plays by a user of an item",
+                "description": "Request plays logged by a particular user or for a particular item.",
+                "operationId": "GetPlays",
+                "parameters": [
+                    {
+                        "description": "Name of the player you want to request play information for. Data is returned in backwards-chronological form. You must include either a username or an id and type to get results.",
+                        "in": "query",
+                        "name": "username",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Id number of the item you want to request play information for. Data is returned in backwards-chronological form.",
+                        "in": "query",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Type of the item you want to request play information for. Valid types include; thing and family.",
+                        "in": "query",
+                        "name": "type",
+                        "schema": {
+                            "enum": [
+                                "thing",
+                                "family"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Returns only plays of the specified date or later.",
+                        "in": "query",
+                        "name": "mindate",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Returns only plays of the specified date or earlier.",
+                        "in": "query",
+                        "name": "maxdate",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Limits play results to the specified TYPE; boardgame is the default. Valid types include; boardgame, boardgameexpansion, boardgameaccessory, boardgameintegration, boardgamecompilation, boardgameimplementation, rpg, rpgitem amd videogame.",
+                        "in": "query",
+                        "name": "subtype",
+                        "schema": {
+                            "enum": [
+                                "boardgame",
+                                "boardgameexpansion",
+                                "boardgameaccessory",
+                                "boardgameintegration",
+                                "boardgamecompilation",
+                                "boardgameimplementation",
+                                "rpg",
+                                "rpgitem",
+                                "videogame"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The page of information to request. Page size is 100 records.",
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with play data."
+                    }
+                }
+            }
+        },
+        "/collection": {
+            "get": {
+                "summary": "Retrieve User Collection Information",
+                "description": "Request details about a user's collection, with various filters for customization.",
+                "operationId": "GetCollection",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "description": "Name of the user to request the collection for.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "version",
+                        "in": "query",
+                        "description": "Returns version info for each item in your collection.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "subtype",
+                        "in": "query",
+                        "description": "Specifies which collection you want to retrieve. Valid types are boardgame, boardgameexpansion, boardgameaccessory, rpgitem, rpgissue, or videogame.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "excludesubtype",
+                        "in": "query",
+                        "description": "Specifies which subtype you want to exclude from the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Filter collection to specifically listed item(s). NNN may be a comma-delimited list of item ids.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "brief",
+                        "in": "query",
+                        "description": "Returns more abbreviated results.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "stats",
+                        "in": "query",
+                        "description": "Returns expanded rating/ranking info for the collection.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "own",
+                        "in": "query",
+                        "description": "Filter for owned games. Set to 1 for returning owned games and 0 for non-owned games.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "rated",
+                        "in": "query",
+                        "description": "Filter for whether an item has been rated. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "played",
+                        "in": "query",
+                        "description": "Filter for whether an item has been played. Set to 0 to exclude these items so marked. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "comment",
+                        "in": "query",
+                        "description": "Filter for items that have been commented. Set to 0 to exclude these items so marked. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "trade",
+                        "in": "query",
+                        "description": "Filter for items marked for trade. Set to 0 to exclude these items so marked. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "want",
+                        "in": "query",
+                        "description": "Filter for items wanted in trade. Set to 0 to exclude these items so marked. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "wishlist",
+                        "in": "query",
+                        "description": "Filter for items on the wishlist. Set to 0 to exclude these items so marked. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "wishlistpriority",
+                        "in": "query",
+                        "description": "Filter for wishlist priority. Set to a number between 1 to 5 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 5
+                        }
+                    },
+                    {
+                        "name": "preordered",
+                        "in": "query",
+                        "description": "Filter for pre-ordered games. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "wanttoplay",
+                        "in": "query",
+                        "description": "Filter for items marked as wanting to play. Set to 0 to exclude these items so marked. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "wanttobuy",
+                        "in": "query",
+                        "description": "Filter for items marked as wanting to buy. Set to 0 to exclude these items so marked. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "prevowned",
+                        "in": "query",
+                        "description": "Filter for games previously owned. Set to 0 to exclude these items so marked. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "hasparts",
+                        "in": "query",
+                        "description": "Filter on whether there is a comment in the Has Parts field of the item. Set to 0 to exclude these items so marked. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "wantparts",
+                        "in": "query",
+                        "description": "Filter on whether there is a comment in the Wants Parts field of the item. Set to 0 to exclude these items so marked. Set to 1 to include only these items so marked.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "minrating",
+                        "in": "query",
+                        "description": "Filter on minimum personal rating assigned for that item in the collection.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10
+                        }
+                    },
+                    {
+                        "name": "rating",
+                        "in": "query",
+                        "description": "Filter on maximum personal rating assigned for that item in the collection.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10
+                        }
+                    },
+                    {
+                        "name": "minbggrating",
+                        "in": "query",
+                        "description": "Filter on minimum BGG rating for that item in the collection.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": -1,
+                            "maximum": 10
+                        }
+                    },
+                    {
+                        "name": "bggrating",
+                        "in": "query",
+                        "description": "Filter on maximum BGG rating for that item in the collection.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10
+                        }
+                    },
+                    {
+                        "name": "minplays",
+                        "in": "query",
+                        "description": "Filter by minimum number of recorded plays.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "maxplays",
+                        "in": "query",
+                        "description": "Filter by maximum number of recorded plays.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "showprivate",
+                        "in": "query",
+                        "description": "Filter to show private collection info. Only works when viewing your own collection and you are logged in.",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "collid",
+                        "in": "query",
+                        "description": "Restrict the collection results to the single specified collection id.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "modifiedsince",
+                        "in": "query",
+                        "description": "Restricts the collection results to only those items which have changed or been added since the date specified.",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with user collection data."
+                    }
+                }
+            }
+        },
+        "/hot": {
+            "get": {
+                "summary": "Retrieve Most Active Items on the site",
+                "description": "You can retrieve the list of most active items on the site.",
+                "operationId": "GetHotItems",
+                "parameters": [
+                    {
+                        "description": "There are a number of different hot lists available on the site. Valid types include; boardgame, rpg, videogame, boardgameperson, rpgperson, boardgamecompany, rpgcompany and videogamecompany",
+                        "in": "query",
+                        "name": "type",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with hot items data."
+                    }
+                }
+            }
+        },
+        "/search": {
+            "get": {
+                "summary": "Search the Database for Items",
+                "description": "You can search for items from the database by name.",
+                "operationId": "Search",
+                "parameters": [
+                    {
+                        "description": "Returns all types of Items that match SEARCH_QUERY. Spaces in the SEARCH_QUERY are replaced by a +",
+                        "in": "query",
+                        "name": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Return all items that match SEARCH_QUERY of type TYPE. TYPE might be rpgitem, videogame, boardgame, boardgameaccessory or boardgameexpansion. You can return multiple types by listing them separated by commas, e.g. type=TYPE1,TYPE2,TYPE3",
+                        "in": "query",
+                        "name": "type",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Limit results to items that match the SEARCH_QUERY exactly",
+                        "in": "query",
+                        "name": "exact",
+                        "required": false,
+                        "schema": {
+                            "enum": [
+                                1
+                            ],
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response found items data."
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+        }
+    }
+}
